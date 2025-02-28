@@ -15,8 +15,8 @@ pip install -r requirements.txt
 Need to add env variable either as system env, or into .env file
 
 ```bash
-BITBUCKET_USERNAME = ""
-BITBUCKET_APP_PASSWORD = ""
+BITBUCKET_USERNAME=""
+BITBUCKET_APP_PASSWORD=""
 ```
 
 
