@@ -17,9 +17,10 @@ Need to add env variable either as system env, or into .env file
 ```bash
 BITBUCKET_USERNAME=""
 BITBUCKET_APP_PASSWORD=""
+BITBUCKET_PASSWORD=""
+BITBUCKET_USERNAME_EMAIL=""
+BITBUCKET_WORKSPACE=""
 ```
-
-
 
 
 
