@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 # Load .env file
 load_dotenv()
 
+
+# TODO: add handling when env is not defined
 BITBUCKET_USERNAME = os.getenv("BITBUCKET_USERNAME")
 BITBUCKET_APP_PASSWORD = os.getenv("BITBUCKET_APP_PASSWORD")
 

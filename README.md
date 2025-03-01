@@ -21,10 +21,20 @@ BITBUCKET_APP_PASSWORD=""
 
 
 
-## API testing
+
+
+## API testing1
 
 We will use docs from 
 https://developer.atlassian.com/cloud/bitbucket/rest/api-group-repositories/#api-repositories-workspace-repo-slug-post
 
 
+## Git operations
 
+Those test require git to be installed into os.
+
+```bash
+apt install git
+```
+
+Those test will create intermediate directories in git_operation/.tmp file (which is specified in .gitignore)
