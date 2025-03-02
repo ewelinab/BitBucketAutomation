@@ -28,5 +28,6 @@ class BasePage(ABC):
         """
         Abstract method that should be implemented by subclasses.
         This method should contain logic to check if the page is loaded.
+        Should return True if page was loaded.
         """
         pass

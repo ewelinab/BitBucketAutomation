@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 import config
+from ui.pages.BitbucketCreateRepositoryPage import BitbucketRepositoryPage
 from ui.pages.BitbucketLoginPage import BitbucketLoginPage
 
 
@@ -21,12 +22,12 @@ def driver():
 
 
 def test_create_repository(driver):
-    # Get credentials and workspace from config
-    username = config.BITBUCKET_USERNAME_EMAIL
-    password = config.BITBUCKET_PASSWORD
-    workspace = config.BITBUCKET_WORKSPACE
-
     # Log into Bitbucket
     login_page = BitbucketLoginPage(driver)
     login_page.open()
-    login_page.login(username, password)  # Use the credentials from config
+    login_page.login(config.BITBUCKET_USERNAME_EMAIL, config.BITBUCKET_PASSWORD)
+
+    repo_page = BitbucketRepositoryPage(config.BITBUCKET_WORKSPACE, driver)
+    repo_page.open()
+    repo_page.create_repository("test11113")
+

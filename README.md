@@ -39,3 +39,9 @@ apt install git
 ```
 
 Those test will create intermediate directories in git_operation/.tmp file (which is specified in .gitignore)
+
+
+## UI testing
+
+I will use API calls to test some assumptions or test correctness of some operation.
+So our assumption is that API working correctly is mandatory for those tests.
