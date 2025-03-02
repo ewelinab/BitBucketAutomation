@@ -45,3 +45,17 @@ Those test will create intermediate directories in git_operation/.tmp file (whic
 
 I will use API calls to test some assumptions or test correctness of some operation.
 So our assumption is that API working correctly is mandatory for those tests.
+
+
+## Parallel run
+We will use `pytest-xdist` to be able to run multiple test in parallel.
+Our current parallel streams will allow to run in parallel 
+- api test
+- git operation test
+- ui test (ui test will be run also in parallel internally as we were able to make some of the logic orthogonal, and we decided for scope function to be able to run them in same time)
+
+Command to run test in parallel
+```bash
+pytest -n 4
+```
+

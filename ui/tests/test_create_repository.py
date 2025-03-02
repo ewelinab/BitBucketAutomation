@@ -11,8 +11,8 @@ from ui.pages.BitbucketPrPage import BitbucketPrPage
 
 
 # Setup WebDriver using webdriver_manager
-@pytest.fixture(scope="module")
-def driver():
+@pytest.fixture(scope="function")
+def ui_fixture():
     """Set up the Selenium WebDriver using webdriver_manager."""
     options = Options()
     options.add_argument("start-maximized")
@@ -24,7 +24,8 @@ def driver():
     driver.quit()
 
 @pytest.fixture(scope="function")
-def login(driver):
+def login(ui_fixture):
+    driver = ui_fixture
     """Logs into Bitbucket before each test."""
     login_page = BitbucketLoginPage(driver)
     login_page.open()
@@ -82,6 +83,5 @@ def test_modify_files_and_submit_pr(login):
     # Validate Pull Request Changes
     file_page.open()
     assert file_page.get_content() == "ab"
-    pass
 
 

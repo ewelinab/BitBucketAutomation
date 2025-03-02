@@ -1,5 +1,7 @@
 import logging
 
+import pytest
+
 from api.repositories import Repositories
 from config import BITBUCKET_USERNAME, BITBUCKET_APP_PASSWORD, BITBUCKET_WORKSPACE
 
@@ -7,8 +9,11 @@ logger = logging.getLogger(__name__)
 
 AUTH = (BITBUCKET_USERNAME, BITBUCKET_APP_PASSWORD)
 
+@pytest.fixture(scope="module")
+def api_fixture():
+    pass
 
-def test_basic_api_operation():
+def test_basic_api_operation(api_fixture):
     repo_name = "test_repo_4"
     repo = Repositories(AUTH, BITBUCKET_WORKSPACE)
 

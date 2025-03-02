@@ -171,3 +171,4 @@ cython_debug/
 .pypirc
 .idea
 git_operations/.tmp
+.tmp

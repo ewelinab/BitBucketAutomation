@@ -1,11 +1,12 @@
 import os
+
+import pytest
 import requests
-import git
 import logging
 import shutil
 import time
 from git import Repo
-from config import BITBUCKET_USERNAME, BITBUCKET_APP_PASSWORD, BITBUCKET_WORKSPACE, BASE_URL
+from config import BITBUCKET_USERNAME, BITBUCKET_APP_PASSWORD, BITBUCKET_WORKSPACE
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +17,11 @@ BITBUCKET_API_URL = f"https://api.bitbucket.org/2.0/repositories/{BITBUCKET_WORK
 LOCAL_REPO_PATH = ".tmp/git_test_repo"
 REPO_URL = f"https://{BITBUCKET_USERNAME}:{BITBUCKET_APP_PASSWORD}@bitbucket.org/{BITBUCKET_WORKSPACE}/{REPO_NAME}.git"
 MODIFIED_FILE = "README.md"
+
+@pytest.fixture(scope="module")
+def git_operations_fixture():
+    pass
+
 
 def clone_repo():
     if os.path.exists(LOCAL_REPO_PATH):
@@ -72,7 +78,7 @@ def validate_remote_modified_files(commit_hash, diff):
     return True
 
 # Complete test function
-def test_git_operations():
+def test_git_operations(git_operations_fixture):
     repo = clone_repo()
     modify_file()
     (commit_hash, diff) = commit_and_push(repo)
