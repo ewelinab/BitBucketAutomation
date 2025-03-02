@@ -5,15 +5,22 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 class BasePage(ABC):
-    # Every page need to redefined PAGE_URL
-    PAGE_URL = ""
-    def __init__(self, driver):
+    """
+    Class used to be inherited by all Pages in our framework
+    """
+
+    def __init__(self, page_url, driver):
+        """
+        :param page_url: page url that will be used when page is open
+        :param driver: webdriver instance
+        """
+        self.page_url = page_url
         self.driver = driver
         self.wait = WebDriverWait(self.driver, 30, poll_frequency=0.2, ignored_exceptions=[NoSuchElementException])
 
     def open(self):
-        """Navigate to the Bitbucket login page"""
-        self.driver.get(self.PAGE_URL)
+        """Navigate to page url"""
+        self.driver.get(self.page_url)
         assert self.is_page_loaded(), "Page was not loaded correctly"
 
     @abstractmethod
