@@ -24,4 +24,5 @@ def test_basic_api_operation():
 
         repo.create_branch(repo_name, "test-branch")
     finally:
-        repo.delete_repository(repo_name)
+        assert repo.delete_repository(repo_name), f"Failed to delete repo"
+

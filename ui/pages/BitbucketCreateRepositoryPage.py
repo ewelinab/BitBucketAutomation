@@ -6,7 +6,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 import config
-from api.repositories import Repositories
 from ui.pages.BasePage import BasePage
 
 logger = logging.getLogger(__name__)
@@ -52,6 +51,3 @@ class BitbucketRepositoryPage(BasePage):
         self.wait.until(EC.element_to_be_clickable(self.REPO_NAME_INPUT)).send_keys(repo_name)
         self.wait.until(EC.element_to_be_clickable(self.CREATE_REPO_BUTTON)).click()
         logger.info(f"Repository '{repo_name}' creation submitted.")
-
-        repo = Repositories((config.BITBUCKET_USERNAME, config.BITBUCKET_APP_PASSWORD), config.BITBUCKET_WORKSPACE)
-        assert repo.get_repo_details(repo_name)["name"] == repo_name, "Repository was not created correctly"

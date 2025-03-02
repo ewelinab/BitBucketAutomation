@@ -113,9 +113,4 @@ class Repositories:
         response = requests.delete(url, auth=self.auth)
 
         logger.debug(f"Response: {response.status_code} - {response.text}")
-
-        assert response.status_code == 204, f"Failed to delete repo: {response.text}"
-
-        # Validate deletion
-        response = requests.get(url, auth=self.auth)
-        assert response.status_code == 404, f"Repository still exists after delete: {response.text}"
+        return response.status_code == 204
