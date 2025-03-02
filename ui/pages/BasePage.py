@@ -4,10 +4,17 @@ from selenium.common import NoSuchElementException
 from selenium.webdriver.support.wait import WebDriverWait
 
 
-class Page(ABC):
+class BasePage(ABC):
+    # Every page need to redefined PAGE_URL
+    PAGE_URL = ""
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(self.driver, 30, poll_frequency=0.2, ignored_exceptions=[NoSuchElementException])
+
+    def open(self):
+        """Navigate to the Bitbucket login page"""
+        self.driver.get(self.PAGE_URL)
+        assert self.is_page_loaded(), "Page was not loaded correctly"
 
     @abstractmethod
     def is_page_loaded(self):

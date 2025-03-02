@@ -5,14 +5,14 @@ from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
-from ui.pages.Page import Page
+from ui.pages.BasePage import BasePage
 
 logger = logging.getLogger(__name__)
 
 
-class BitbucketLoginPage(Page):
+class BitbucketLoginPage(BasePage):
     # Define locators for the login page
-    LOGIN_URL = "https://bitbucket.org/account/signin/"
+    PAGE_URL = "https://bitbucket.org/account/signin/"
     USERNAME_FIELD = (By.ID, "username")
     PASSWORD_FIELD = (By.ID, "password")
     CONTINUE_BUTTON = (By.ID, "login-submit")  # Use ID for continue button
@@ -29,11 +29,6 @@ class BitbucketLoginPage(Page):
         except Exception as e:
             logger.error(e)
             return False
-
-    def open(self):
-        """Navigate to the Bitbucket login page"""
-        self.driver.get(self.LOGIN_URL)
-        assert self.is_page_loaded(), "Page was not loaded correctly"
 
     def is_logged_in(self):
         """Validate that login was successful by checking for the pull request section"""
