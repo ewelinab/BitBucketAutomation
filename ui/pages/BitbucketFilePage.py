@@ -1,8 +1,4 @@
 import logging
-
-import selenium
-from selenium.common import NoSuchElementException
-from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -54,4 +50,8 @@ class BitbucketFilePage(BasePage):
 
         commit_button = commit_form.find_element(By.XPATH, "//div[@class='dialog-button-panel']//button[contains(., 'Commit')]")
         commit_button.click()
-        pass
+        self.wait.until(EC.url_contains("pull-requests"))
+
+    def get_content(self):
+        self.FILE_CONTENT = (By.XPATH, '//div[@data-qa="bk-file__content"]//p[1]')
+        return self.wait.until(EC.element_to_be_clickable(self.FILE_CONTENT)).text
