@@ -14,6 +14,8 @@ class BitbucketFilePage(BasePage):
     """
     EDIT_BUTTON = (By.XPATH, '//main//button[contains(., "Edit")][1]')
     COMMIT_BUTTON = (By.XPATH, '//form//button[contains(., "Commit")][1]')
+    FILE_CONTENT = (By.XPATH, '//div[@data-qa="bk-file__content"]//p[1]')
+    COMMIT_FORM = (By.ID, "commit-form")
     def __init__(self, workspace, repo_name, branch_name, file_name, driver):
         """
         Initializes the BitbucketFilePage object with the specific URL for a given file.
@@ -58,7 +60,6 @@ class BitbucketFilePage(BasePage):
         filling out the branch name, and submitting the commit form.
         """
         self.wait.until(EC.element_to_be_clickable(self.COMMIT_BUTTON)).click()
-        self.COMMIT_FORM = (By.ID, "commit-form")
         commit_form = self.wait.until(EC.visibility_of_element_located(self.COMMIT_FORM))
 
         # pull_request_checkbox = commit_form.find_element(By.ID, "id_create-pullrequest")
@@ -82,5 +83,4 @@ class BitbucketFilePage(BasePage):
 
         :return: The text content of the file from the page.
         """
-        self.FILE_CONTENT = (By.XPATH, '//div[@data-qa="bk-file__content"]//p[1]')
         return self.wait.until(EC.element_to_be_clickable(self.FILE_CONTENT)).text
