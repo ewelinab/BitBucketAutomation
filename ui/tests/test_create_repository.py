@@ -1,4 +1,5 @@
 import pytest
+import allure
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -37,6 +38,13 @@ repo = Repositories((config.BITBUCKET_USERNAME, config.BITBUCKET_APP_PASSWORD), 
 
 
 #Create Repository (UI)
+@allure.epic('UI operations')
+@allure.story('Create a new repository')
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.description(
+    'This test creates a new repository on Bitbucket, ensures the repository does not already exist before creation, '
+    'and validates that the repository was created successfully.'
+)
 def test_create_repository(login):
     driver = login
     repo_page = BitbucketRepositoryPage(config.BITBUCKET_WORKSPACE, driver)
@@ -49,7 +57,13 @@ def test_create_repository(login):
     repo_page.create_repository(repo_name)
     assert repo.get_repo_details(repo_name)["name"] == repo_name, "Repository was not created correctly"
 
-
+@allure.epic('UI operations')
+@allure.story('Modify file, submit PR, review, and merge')
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.description(
+    'This test performs the following steps: modifying a file in a repository, creating a pull request (PR), '
+    'reviewing the PR diff, merging the PR, and validating that the changes have been applied successfully in the repository.'
+)
 def test_modify_files_and_submit_pr(login):
     driver = login
     repo_name = "test-modify_files_and_submit_pr"
@@ -84,4 +98,15 @@ def test_modify_files_and_submit_pr(login):
     file_page.open()
     assert file_page.get_content() == "ab"
 
-
+@allure.epic('UI operations')
+@allure.story('Test repository permissions with role switching')
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.description(
+    'This test performs the following steps: '
+    '1. Navigating to Repository Settings and adding a new user with read access. '
+    '2. Logging in as the new user and attempting to create a branch, modify a file, and verify that they can only view the repository and pull requests. '
+    '3. Switching the new user’s role to write access, and verifying the user can push commits and approve/merge PRs. '
+    '4. Removing the user from the repository and verifying that access is denied.'
+)
+def test_repository_role_permissions(login):
+    pass

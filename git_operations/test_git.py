@@ -1,5 +1,6 @@
 import os
 
+import allure
 import pytest
 import requests
 import logging
@@ -78,6 +79,14 @@ def validate_remote_modified_files(commit_hash, diff):
     return True
 
 # Complete test function
+@allure.epic('Git Operations')
+@allure.story('Clone repository, modify file, push changes')
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.description(
+    'This test performs a series of Git operations including cloning a repository, '
+    'modifying a file, committing the changes and pushing the new changes to Bitbucket. '
+    'It validates if the modified file has been correctly updated on the remote repository.'
+)
 def test_git_operations(git_operations_fixture):
     repo = clone_repo()
     modify_file()
