@@ -12,7 +12,10 @@ logger = logging.getLogger(__name__)
 
 
 class BitbucketRepositoryPage(BasePage):
-    """Page Object Model for Bitbucket's Repository Page"""
+    """
+    Page Object Model (POM) for Bitbucket's Repository Page.
+    Provides methods to interact with elements on the repository creation page.
+    """
     PROJECT_NAME_DROPDOWN_BUTTON = (By.XPATH, '//div[@id="s2id_id_project"]/a[1]')
     PROJECT_NAME_DROPDOWN_INPUT = (By.ID, "s2id_autogen5_search")
     PROJECT_NAME_DROPDOWN_SPAN = (By.XPATH, "//ul[@class='select2-results']/span[contains(text(), 'Untitled project')]")
@@ -21,10 +24,20 @@ class BitbucketRepositoryPage(BasePage):
 
 
     def __init__(self, workspace, driver):
+        """
+        Initializes the repository page object.
+
+        :param workspace: The Bitbucket workspace where the repository will be created.
+        :param driver: The WebDriver instance for interacting with the browser.
+        """
         super().__init__(f"{config.BITBUCKET_UI_URL}/{workspace}/workspace/create/repository", driver)
 
     def is_page_loaded(self):
-        """Check if the repository page is loaded by verifying the 'Create repository' button"""
+        """
+        Checks if the repository creation page is loaded by waiting for the 'Create repository' button to be visible.
+
+        :return: True if the page is loaded correctly, False otherwise.
+        """
         try:
             self.wait.until(EC.visibility_of_element_located(self.CREATE_REPO_BUTTON))
             return True
@@ -33,12 +46,18 @@ class BitbucketRepositoryPage(BasePage):
             return False
 
     def open_create_repository_form(self):
-        """Click the 'Create repository' button to open the form"""
+        """
+        Opens the 'Create repository' form by clicking the corresponding button on the page.
+        """
         self.wait.until(EC.element_to_be_clickable(self.CREATE_REPO_BUTTON)).click()
         logger.info("Opened the create repository form.")
 
     def create_repository(self, repo_name):
-        """Fill in the repository name and submit the form"""
+        """
+        Fills in the repository name and submits the repository creation form.
+
+        :param repo_name: The name of the repository to be created.
+        """
         select_project = self.wait.until(EC.element_to_be_clickable(self.PROJECT_NAME_DROPDOWN_BUTTON))
         select_project.click()
         # TODO: figure out how to fix loading of items

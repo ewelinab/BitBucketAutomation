@@ -1,4 +1,3 @@
-# maybe we should put all repo code here
 import logging
 
 import requests
@@ -9,17 +8,35 @@ logger = logging.getLogger(__name__)
 
 
 class Repositories:
+    """
+    A class that provides methods for interacting with Bitbucket repositories via API.
+    It supports creating repositories, fetching repository details, checking branches,
+    initializing branches, and deleting repositories.
+    """
+
+    # Base URL for the Bitbucket repository API
     REPO_BASE_URL = f"{config.BASE_API_URL}/repositories"
 
     def __init__(self, auth, workspace):
+        """
+        Initializes the Repositories object with authentication credentials and workspace.
+
+        :param auth: Tuple containing the username and app password for authentication.
+        :param workspace: The Bitbucket workspace where the repository will be created or accessed.
+        """
         self.workspace = workspace
         self.auth = auth
         super().__init__()
 
     def create_repositories(self, repo_name):
+        """
+        Creates a new repository in the specified workspace.
+
+        :param repo_name: The name of the repository to be created.
+        """
         url = f"{self.REPO_BASE_URL}/{self.workspace}/{repo_name}"
 
-        # we do not define project so it will be assigned to last used one
+        # I do not define project so it will be assigned to last used one
         payload = {
             "scm": "git",
             "is_private": True
@@ -32,6 +49,12 @@ class Repositories:
         assert response.json().get("name") == repo_name
 
     def get_repo_details(self, repo_name):
+        """
+        Fetches details for a specified repository.
+
+        :param repo_name: The name of the repository to fetch details for.
+        :return: The JSON response containing repository details.
+        """
         url = f"{self.REPO_BASE_URL}/{self.workspace}/{repo_name}"
 
         logger.info(f"Fetching repository details: {repo_name}")
@@ -44,10 +67,17 @@ class Repositories:
         elif response.status_code == 404:
             logger.warning(f"Repository not found. response={response.text}")
 
-        # all other codes are unexpected so we want to raise exception
+        # All other codes are unexpected, so I want to raise exception
         response.raise_for_status()
 
     def branch_exist(self, repo_name, branch_name):
+        """
+        Checks if a specific branch exists in the repository.
+
+        :param repo_name: The name of the repository.
+        :param branch_name: The name of the branch to check.
+        :return: True if the branch exists, False if it does not.
+        """
         url = f"{self.REPO_BASE_URL}/{self.workspace}/{repo_name}/refs/branches/{branch_name}"
         logger.debug(f"GET Request URL: {url}")
         response = requests.get(url, auth=self.auth)
@@ -59,10 +89,17 @@ class Repositories:
         elif response.status_code == 404:
             return False
 
-        # all other codes are unexpected so we want to raise exception
+        # All other codes are unexpected, so I want to raise exception
         response.raise_for_status()
 
     def initialize_main_branch(self, repo_name, commit_name, files):
+        """
+        Initializes the 'main' branch in the repository with an initial commit.
+
+        :param repo_name: The name of the repository.
+        :param commit_name: The commit message to use for the initial commit.
+        :param files: The files to include in the commit.
+        """
         logger.info("Initializing 'main' branch with an initial commit...")
         url = f"{self.REPO_BASE_URL}/{self.workspace}/{repo_name}/src"
         payload = {
@@ -86,9 +123,10 @@ class Repositories:
 
     def create_branch(self, repo_name, branch_name):
         """
-        Create branch that will be created from main branch. As prerequisite, it needs main to exist.
-        :param repo_name:
-        :param branch_name:
+        Creates a new branch in the repository from the 'main' branch.
+
+        :param repo_name: The name of the repository.
+        :param branch_name: The name of the branch to create.
         """
         url = f"{self.REPO_BASE_URL}/{self.workspace}/{repo_name}/refs/branches"
         payload = {"name": branch_name, "target": {"hash": "main"}}
@@ -108,6 +146,12 @@ class Repositories:
             response.raise_for_status()
 
     def delete_repository(self, repo_name):
+        """
+        Deletes the specified repository from the workspace.
+
+        :param repo_name: The name of the repository to delete.
+        :return: True if the repository is deleted successfully, False otherwise.
+        """
         url = f"{self.REPO_BASE_URL}/{self.workspace}/{repo_name}/"
         logger.info(f"Deleting repository: {repo_name}")
         response = requests.delete(url, auth=self.auth)
