@@ -12,5 +12,5 @@ BITBUCKET_PASSWORD = os.getenv("BITBUCKET_PASSWORD")
 BITBUCKET_USERNAME_EMAIL = os.getenv("BITBUCKET_USERNAME_EMAIL")
 BITBUCKET_WORKSPACE = os.getenv("BITBUCKET_WORKSPACE")
 
-BASE_URL = "https://api.bitbucket.org/2.0"
-BITBUCKET_UI_URL = "https://bitbucket.org/"
+BASE_API_URL = "https://api.bitbucket.org/2.0"
+BITBUCKET_UI_URL = "https://bitbucket.org"
