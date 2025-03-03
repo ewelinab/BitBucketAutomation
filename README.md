@@ -90,6 +90,7 @@ allure serve .tmp/allure-results
 ```
 
 ### Potential improvements
-- Add Docker and align tests to work with headless mode.
-- Perform more cleanup in UI tests (some of the tests, especially role permissions, were done in a hurry, so they need more time to improve and look better).
-- Add support for running tests across multiple browsers.
+- Add Docker and align tests to work with headless mode
+- Perform more cleanup in UI tests (some of the tests, especially role permissions, were done in a hurry, so they need more time to improve and look better)
+- Add support for running tests across multiple browsers
+- Some of the UI tests have locators that are not extracted, which could be improved if more time were given
