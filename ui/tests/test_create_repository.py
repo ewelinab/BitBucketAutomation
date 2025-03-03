@@ -1,7 +1,6 @@
 import allure
 import pytest
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 
 import config
@@ -151,8 +150,8 @@ def test_repository_role_permissions(ui_fixture):
 
     perm_page = RepositoryPermissionPage(config.BITBUCKET_WORKSPACE, repo_name, driver)
     perm_page.open()
-    perm_page.add_privilege("Zostera")
-    perm_page.change_privilege("Zostera", RepositoryPermission.READ)
+    perm_page.add_privilege(config.BITBUCKET_SECOND_USERNAME_NAME)
+    perm_page.change_privilege(config.BITBUCKET_SECOND_USERNAME_NAME, RepositoryPermission.READ)
 
     options = Options()
     options.add_argument("start-maximized")
@@ -164,7 +163,7 @@ def test_repository_role_permissions(ui_fixture):
     try:
         login_page2 = LoginPage(driver2)
         login_page2.open()
-        login_page2.login("zostera.marina63@gmail.com", "Password1!2@")
+        login_page2.login(config.BITBUCKET_SECOND_USERNAME_EMAIL, config.BITBUCKET_SECOND_USER_PASSWORD)
 
         branches_page = BranchesPage(config.BITBUCKET_WORKSPACE, repo_name, driver2)
         branches_page.open()
@@ -180,7 +179,7 @@ def test_repository_role_permissions(ui_fixture):
         assert not pr_page.have_permission_to_create_pull_request(), "Read only user should not have permission to create pull request"
 
         # Change permission to write
-        perm_page.change_privilege("Zostera", RepositoryPermission.WRITE)
+        perm_page.change_privilege(config.BITBUCKET_SECOND_USERNAME_NAME, RepositoryPermission.WRITE)
 
         # Try to push a commit
         file_page = FilePage(config.BITBUCKET_WORKSPACE, repo_name, "main", "README.md", driver2)
@@ -194,7 +193,7 @@ def test_repository_role_permissions(ui_fixture):
         pr_page.merge()
 
         # Remove user
-        perm_page.remove_user("Zostera")
+        perm_page.remove_user(config.BITBUCKET_SECOND_USERNAME_NAME)
 
         # Check access
         file_page = FilePage(config.BITBUCKET_WORKSPACE, repo_name, "main", "README.md", driver2)

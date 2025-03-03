@@ -15,6 +15,9 @@ BITBUCKET_APP_PASSWORD = os.getenv("BITBUCKET_APP_PASSWORD")
 BITBUCKET_PASSWORD = os.getenv("BITBUCKET_PASSWORD")
 BITBUCKET_USERNAME_EMAIL = os.getenv("BITBUCKET_USERNAME_EMAIL")
 BITBUCKET_WORKSPACE = os.getenv("BITBUCKET_WORKSPACE")
+BITBUCKET_SECOND_USERNAME_EMAIL = os.getenv("BITBUCKET_SECOND_USERNAME_EMAIL")
+BITBUCKET_SECOND_USER_PASSWORD = os.getenv("BITBUCKET_SECOND_USER_PASSWORD")
+BITBUCKET_SECOND_USERNAME_NAME = os.getenv("BITBUCKET_SECOND_USERNAME_NAME")
 
 if not BITBUCKET_USERNAME:
     logger.error("Environment variable BITBUCKET_USERNAME is not defined or is empty.")
@@ -26,9 +29,16 @@ if not BITBUCKET_USERNAME_EMAIL:
     logger.error("Environment variable BITBUCKET_USERNAME_EMAIL is not defined or is empty.")
 if not BITBUCKET_WORKSPACE:
     logger.error("Environment variable BITBUCKET_WORKSPACE is not defined or is empty.")
+if not BITBUCKET_SECOND_USERNAME_EMAIL:
+    logger.error("Environment variable BITBUCKET_SECOND_USERNAME_EMAIL is not defined or is empty.")
+if not BITBUCKET_SECOND_USER_PASSWORD:
+    logger.error("Environment variable BITBUCKET_SECOND_USER_PASSWORD is not defined or is empty.")
+if not BITBUCKET_SECOND_USERNAME_NAME:
+    logger.error("Environment variable BITBUCKET_SECOND_USERNAME_NAME is not defined or is empty.")
 
 # If all required variables are set, log success
-if all([BITBUCKET_USERNAME, BITBUCKET_APP_PASSWORD, BITBUCKET_PASSWORD, BITBUCKET_USERNAME_EMAIL, BITBUCKET_WORKSPACE]):
+if all([BITBUCKET_USERNAME, BITBUCKET_APP_PASSWORD, BITBUCKET_PASSWORD, BITBUCKET_USERNAME_EMAIL, BITBUCKET_WORKSPACE,
+        BITBUCKET_SECOND_USERNAME_EMAIL, BITBUCKET_SECOND_USER_PASSWORD, BITBUCKET_SECOND_USERNAME_NAME]):
     logger.info("All environment variables are set up correctly.")
 else:
     logger.info("Not all environment variables are set up correctly.")
