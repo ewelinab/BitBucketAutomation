@@ -1,14 +1,19 @@
 import pytest
 import allure
+import selenium
+from selenium.common import NoSuchElementException
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 import config
 from api.repositories import Repositories
+from ui.pages.BitBucketBranchesPage import BitbucketBranchesPage
 from ui.pages.BitbucketCreateRepositoryPage import BitbucketRepositoryPage
 from ui.pages.BitbucketFilePage import BitbucketFilePage
 from ui.pages.BitbucketLoginPage import BitbucketLoginPage
-from ui.pages.BitbucketPrPage import BitbucketPrPage
+from ui.pages.BitbucketPrDiffPage import BitbucketPrDiffPage
+from ui.pages.BitbucketPullRequestsPage import BitbucketPullRequestsPage
+from ui.pages.BitbucketRepoPermissionPage import BitbucketRepoPermissionPage, RepoPermission
 
 
 # Setup WebDriver using webdriver_manager
@@ -72,7 +77,7 @@ def test_create_repository(login):
     driver = login
     repo_page = BitbucketRepositoryPage(config.BITBUCKET_WORKSPACE, driver)
     repo_page.open() # Navigate to the repository creation page
-    repo_name = "test-create-ui-repo"
+    repo_name = "ui-test-create-repo"
 
     # Ensure the repository does not exist before creating it
     repo.delete_repository(repo_name)
@@ -96,13 +101,13 @@ def test_modify_files_and_submit_pr(login):
     reviewing and merging the PR, and ensuring that the changes are applied to the repository.
     """
     driver = login
-    repo_name = "test-modify_files_and_submit_pr"
+    repo_name = "ui-test-modify_files_and_submit_pr"
 
     # Prepare the repository for UI tests
-    repo.delete_repository(repo_name) # Delete the repo if it exists
-    repo.create_repositories(repo_name) # Create the repository
+    repo.delete_repository(repo_name)
+    repo.create_repositories(repo_name)
     repo.initialize_main_branch(repo_name, "Initial commit to create main",
-                                {'README.md': ('README.md', b'a')}) # Initialize the main branch with a README
+                                {'README.md': ('README.md', b'a')})
 
     # Modify Files and Submit Pull Request
     file_page = BitbucketFilePage(config.BITBUCKET_WORKSPACE, repo_name, "main", "README.md", driver)
@@ -112,7 +117,7 @@ def test_modify_files_and_submit_pr(login):
     file_page.commit() # Commit the changes
 
     # Create a pull request for the changes
-    pr_page = BitbucketPrPage(config.BITBUCKET_WORKSPACE, repo_name, 1, driver)
+    pr_page = BitbucketPrDiffPage(config.BITBUCKET_WORKSPACE, repo_name, 1, driver)
     pr_page.open() # Open the pull request page
 
     # Review and Merge Pull Request
@@ -141,10 +146,81 @@ def test_modify_files_and_submit_pr(login):
     '3. Switching the new user’s role to write access, and verifying the user can push commits and approve/merge PRs. '
     '4. Removing the user from the repository and verifying that access is denied.'
 )
-def test_repository_role_permissions(login):
+def test_repository_role_permissions(ui_fixture):
     """
     Test to validate the repository permissions by switching the user role.
     The test ensures that the user with read access cannot modify the repository,
     while the user with write access can perform modifications.
     """
+    driver = ui_fixture
+    repo_name = "ui-test-permissions"
+    repo.delete_repository(repo_name)
+    repo.create_repositories(repo_name)
+    repo.initialize_main_branch(repo_name, "Initial commit to create main",
+                                {'README.md': ('README.md', b'a')})
+
+
+    """Logs into Bitbucket as admin user."""
+    login_page = BitbucketLoginPage(driver)
+    login_page.open()
+    login_page.login(config.BITBUCKET_USERNAME_EMAIL, config.BITBUCKET_PASSWORD)
+
+    perm_page = BitbucketRepoPermissionPage(config.BITBUCKET_WORKSPACE, repo_name, driver)
+    perm_page.open()
+    perm_page.add_privilege("Zostera")
+    perm_page.change_privilege("Zostera", RepoPermission.READ)
+
+
+    options = Options()
+    options.add_argument("start-maximized")
+    options.add_argument("--no-sandbox")  # Disable sandbox (for CI/CD or Docker)
+    options.add_argument("--disable-dev-shm-usage")  # Disable /dev/shm usage (for CI/CD)
+    options.add_argument("--start-maximized")  # Start the browser maximized
+
+    # Initialize the Chrome WebDriver
+    driver2 = webdriver.Chrome(options=options)
+    try:
+        login_page2 = BitbucketLoginPage(driver2)
+        login_page2.open()
+        login_page2.login("zostera.marina63@gmail.com", "Password1!2@")
+
+        branches_page = BitbucketBranchesPage(config.BITBUCKET_WORKSPACE, repo_name, driver2)
+        branches_page.open()
+        assert not branches_page.have_permission_to_create_branch(), "Read only user should not have permission to create branch"
+        file_page = BitbucketFilePage(config.BITBUCKET_WORKSPACE, repo_name, "main", "README.md", driver2)
+        # Test if we can view repository
+        file_page.open()
+        assert file_page.get_content() == "a", "Read user should be able to view repository"
+        assert not file_page.can_edit(), "Read user should not be able to modify file"
+
+        pr_page = BitbucketPullRequestsPage(config.BITBUCKET_WORKSPACE, repo_name, driver2)
+        pr_page.open()
+        assert not pr_page.have_permission_to_create_pull_request(),  "Read only user should not have permission to create pull request"
+
+        # Change permission to write
+        perm_page.change_privilege("Zostera", RepoPermission.WRITE)
+        # Try to push a commit.
+        file_page = BitbucketFilePage(config.BITBUCKET_WORKSPACE, repo_name, "main", "README.md", driver2)
+        file_page.open()
+        file_page.edit()
+        file_page.commit()
+        # Try to approve and merge a PR.
+        pr_page = BitbucketPrDiffPage(config.BITBUCKET_WORKSPACE, repo_name, 1, driver2)
+        pr_page.open()
+        pr_page.merge()
+
+        # Remove user
+        perm_page.remove_user("Zostera")
+
+        # Check access
+        file_page = BitbucketFilePage(config.BITBUCKET_WORKSPACE, repo_name, "main", "README.md", driver2)
+        try:
+            file_page.open()
+            assert False, "User should not be able to open repo page if it do not have permissions"
+        except Exception as e:
+            pass
+
+    finally:
+        driver2.quit()
+
     pass

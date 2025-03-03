@@ -10,7 +10,7 @@ from ui.pages.BasePage import BasePage
 logger = logging.getLogger(__name__)
 
 
-class BitbucketPrPage(BasePage):
+class BitbucketPrDiffPage(BasePage):
     """
     Provides methods to interact with pull requests such as approving, merging, and retrieving diffs.
     """
@@ -20,9 +20,9 @@ class BitbucketPrPage(BasePage):
     MERGE_WAS_CONFIRMED_SPAN = (By.XPATH, '//div[@data-qa="pr-branches-and-state-styles"]//span[contains(., "Merged")][1]')
     def __init__(self, workspace, repo_name, pr_id, driver):
         """
-        Initializes the BitbucketPrPage object with the URL for the specific pull request and the driver.
+        Initializes the BitbucketPrDiffPage object with the URL for the specific pull request and the driver.
 
-        :param workspace: The Bitbucket workspace where the repository exists.
+        :param workspace: The Bitbucket workspace   where the repository exists.
         :param repo_name: The name of the repository.
         :param pr_id: The ID of the pull request.
         :param driver: The WebDriver instance for interacting with the browser.

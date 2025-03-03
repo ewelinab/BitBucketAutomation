@@ -41,6 +41,9 @@ class BitbucketFilePage(BasePage):
             logger.error(e)
             return False
 
+    def can_edit(self):
+        return self.wait.until(EC.visibility_of_element_located(self.EDIT_BUTTON)).is_enabled()
+
     def edit(self):
         """
         Opens the file for editing. This handles the CodeMirror editor by interacting with its elements.
@@ -62,7 +65,6 @@ class BitbucketFilePage(BasePage):
         self.wait.until(EC.element_to_be_clickable(self.COMMIT_BUTTON)).click()
         commit_form = self.wait.until(EC.visibility_of_element_located(self.COMMIT_FORM))
 
-        # pull_request_checkbox = commit_form.find_element(By.ID, "id_create-pullrequest")
         pull_request_checkbox = self.wait.until(EC.element_to_be_clickable((By.ID, "id_create-pullrequest")))
         if not pull_request_checkbox.is_selected():  # If the checkbox is not checked
             # click is intercepted all the time, even that no modal is visible and don't have time to investigate more
