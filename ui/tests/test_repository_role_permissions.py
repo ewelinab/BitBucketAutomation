@@ -10,6 +10,7 @@ from ui.pages.LoginPage import LoginPage
 from ui.pages.PullRequestsDiffPage import PullRequestsDiffPage
 from ui.pages.PullRequestsPage import PullRequestsPage
 from ui.pages.RepositoryPermissionPage import RepositoryPermissionPage, RepositoryPermission
+from ui.tests.conftest import get_default_browser_options
 
 
 @allure.epic('UI operations')
@@ -46,13 +47,7 @@ def test_repository_role_permissions(ui_fixture):
     perm_page.add_privilege(config.BITBUCKET_SECOND_USERNAME_NAME)
     perm_page.change_privilege(config.BITBUCKET_SECOND_USERNAME_NAME, RepositoryPermission.READ)
 
-    options = Options()
-    options.add_argument("start-maximized")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--start-maximized")
-
-    driver2 = webdriver.Chrome(options=options)
+    driver2 = webdriver.Chrome(options=get_default_browser_options())
     try:
         login_page2 = LoginPage(driver2)
         login_page2.open()

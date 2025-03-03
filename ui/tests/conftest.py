@@ -5,6 +5,13 @@ from selenium.webdriver.chrome.options import Options
 import config
 from ui.pages.LoginPage import LoginPage
 
+def get_default_browser_options():
+    options = Options()
+    options.add_argument("start-maximized")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--start-maximized")
+    return options
 
 @pytest.fixture(scope="function")
 def ui_fixture():
@@ -15,13 +22,7 @@ def ui_fixture():
         The fixture is scoped to the function, meaning it is invoked before each test
         and cleaned up afterward.
     """
-    options = Options()
-    options.add_argument("start-maximized")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--start-maximized")
-
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome(options=get_default_browser_options())
     yield driver
     driver.quit()
 
