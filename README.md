@@ -73,7 +73,7 @@ Current parallel test streams allow the following:
 To run tests in parallel, use the following command:
 
 ```bash
-pytest -n 4
+pytest -n 5
 ```
 
 ### Reporting
@@ -89,5 +89,7 @@ pytest --alluredir .tmp/allure-results
 allure serve .tmp/allure-results
 ```
 
-
-
+### Potential improvements
+- Add Docker and align tests to work with headless mode.
+- Perform more cleanup in UI tests (some of the tests, especially role permissions, were done in a hurry, so they need more time to improve and look better).
+- Add support for running tests across multiple browsers.
