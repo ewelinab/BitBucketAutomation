@@ -10,17 +10,19 @@ from ui.pages.BasePage import BasePage
 logger = logging.getLogger(__name__)
 
 
-class BitbucketPrDiffPage(BasePage):
+class PullRequestsDiffPage(BasePage):
     """
     Provides methods to interact with pull requests such as approving, merging, and retrieving diffs.
     """
     MERGE_BUTTON = (By.XPATH, '//main//button[contains(., "Merge")][1]')
     APPROVE_BUTTON = (By.XPATH, '//main//button[contains(., "Approve")][1]')
     MERGE_CONFIRMATION_BUTTON = (By.CSS_SELECTOR, '[data-qa="merge-dialog-merge-button"]')
-    MERGE_WAS_CONFIRMED_SPAN = (By.XPATH, '//div[@data-qa="pr-branches-and-state-styles"]//span[contains(., "Merged")][1]')
+    MERGE_WAS_CONFIRMED_SPAN = (
+    By.XPATH, '//div[@data-qa="pr-branches-and-state-styles"]//span[contains(., "Merged")][1]')
+
     def __init__(self, workspace, repo_name, pr_id, driver):
         """
-        Initializes the BitbucketPrDiffPage object with the URL for the specific pull request and the driver.
+        Initializes the PullRequestsDiffPage object with the URL for the specific pull request and the driver.
 
         :param workspace: The Bitbucket workspace   where the repository exists.
         :param repo_name: The name of the repository.
@@ -49,7 +51,7 @@ class BitbucketPrDiffPage(BasePage):
 
         :return: A tuple containing the text from the file tree list and the diff content.
         """
-        file_tree_list =  self.wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@id='file-tree']//li")))
+        file_tree_list = self.wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@id='file-tree']//li")))
         diff = self.wait.until(EC.visibility_of_element_located((By.XPATH, "//main//div[@class='diff-chunk']")))
         return file_tree_list.text, diff.text
 
@@ -65,10 +67,9 @@ class BitbucketPrDiffPage(BasePage):
         for _ in range(100):
             try:
                 (self.wait.until(EC.element_to_be_clickable(self.MERGE_CONFIRMATION_BUTTON))).click()
-                break  # Exit loop if click succeeds
+                break
             except StaleElementReferenceException:
                 continue
         self.wait.until(EC.visibility_of_element_located(self.MERGE_WAS_CONFIRMED_SPAN))
 
         pass
-

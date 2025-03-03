@@ -36,7 +36,7 @@ class Repositories:
         """
         url = f"{self.REPO_BASE_URL}/{self.workspace}/{repo_name}"
 
-        # I do not define project so it will be assigned to last used one
+        # I do not define project so it is assigned to last used one
         payload = {
             "scm": "git",
             "is_private": True
@@ -116,9 +116,9 @@ class Repositories:
         logger.debug(f"Response Body: {response.text}")
 
         if response.status_code == 201:
-            logger.info("✅ Successfully initialized 'main' branch with initial commit.")
+            logger.info("Successfully initialized 'main' branch with initial commit.")
         else:
-            logger.error(f"❌ Failed to initialize 'main' branch: {response.text}")
+            logger.error(f"Failed to initialize 'main' branch: {response.text}")
             response.raise_for_status()
 
     def create_branch(self, repo_name, branch_name):
@@ -140,9 +140,9 @@ class Repositories:
         logger.debug(f"Response Body: {response.text}")
 
         if response.status_code == 201:
-            logger.info(f"✅ Successfully created the '{branch_name}' branch from 'main'.")
+            logger.info(f"Successfully created the '{branch_name}' branch from 'main'.")
         else:
-            logger.error(f"❌ Failed to create branch '{branch_name}': {response.text}")
+            logger.error(f"Failed to create branch '{branch_name}': {response.text}")
             response.raise_for_status()
 
     def delete_repository(self, repo_name):

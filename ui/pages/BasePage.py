@@ -29,7 +29,7 @@ class BasePage(ABC):
         If the page is not loaded correctly, an assertion error will be raised.
         """
         self.driver.get(self.page_url)
-        assert self.is_page_loaded(), "Page was not loaded correctly"
+        assert self.is_page_loaded(), "Page is not loaded correctly"
 
     @abstractmethod
     def is_page_loaded(self):

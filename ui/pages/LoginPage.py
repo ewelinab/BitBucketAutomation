@@ -11,19 +11,19 @@ from ui.pages.BasePage import BasePage
 logger = logging.getLogger(__name__)
 
 
-class BitbucketLoginPage(BasePage):
+class LoginPage(BasePage):
     """
     Provides methods for logging into Bitbucket, checking login status, and verifying successful login.
     """
     USERNAME_FIELD = (By.ID, "username")
     PASSWORD_FIELD = (By.ID, "password")
-    CONTINUE_BUTTON = (By.ID, "login-submit")  # Use ID for continue button
-    LOGIN_BUTTON = (By.ID, "login-submit")  # Use ID for login button
+    CONTINUE_BUTTON = (By.ID, "login-submit")
+    LOGIN_BUTTON = (By.ID, "login-submit")
     PULL_REQUEST_SECTION = (By.XPATH, '//h2[contains(., "Pull requests")]')
 
     def __init__(self, driver):
         """
-        Initializes the BitbucketLoginPage object with the URL for the login page and the driver.
+        Initializes the LoginPage object with the URL for the login page and the driver.
 
         :param driver: The WebDriver instance for interacting with the browser.
         """
@@ -52,7 +52,7 @@ class BitbucketLoginPage(BasePage):
             assert self.wait.until(EC.visibility_of_element_located(self.PULL_REQUEST_SECTION))
             return True
         except selenium.common.exceptions.TimeoutException as e:
-            logger.info("Pull request section was not available in give time. Login was not successful.")
+            logger.info("Pull request section was not available in give time. Login was not successful")
             return False
 
     def login(self, username, password):
@@ -65,19 +65,17 @@ class BitbucketLoginPage(BasePage):
         :return: True if the login is successful, False otherwise.
         """
         try:
-            # Step 1: Enter username and click the continue button
             username_field = self.wait.until(EC.element_to_be_clickable(self.USERNAME_FIELD))
             username_field.send_keys(username)
             continue_button = self.wait.until(EC.element_to_be_clickable(self.CONTINUE_BUTTON))
             continue_button.click()
 
-            # Wait for password field to appear and be clickable and fill it and click login
             password_field = self.wait.until(EC.element_to_be_clickable(self.PASSWORD_FIELD))
             login_button = self.wait.until(EC.element_to_be_clickable(self.LOGIN_BUTTON))
             password_field.send_keys(password)
             login_button.click()
 
-            # Verify login by checking if the user is logged in (e.g., by checking for a logout button)
+            # Verify login by checking if the user is logged in
             assert self.is_logged_in(), "Login failed, Repositories is not visible"
             return True
         except selenium.common.exceptions.TimeoutException as e:

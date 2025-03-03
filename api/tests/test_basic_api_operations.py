@@ -12,13 +12,14 @@ logger = logging.getLogger(__name__)
 # Authentication tuple for Bitbucket API using username and app password
 AUTH = (BITBUCKET_USERNAME, BITBUCKET_APP_PASSWORD)
 
+
 @pytest.fixture(scope="module")
 def api_fixture():
     """
     Fixture for setting up any necessary resources for API tests.
-    Currently not implemented, but could be used for shared setup in future tests.
     """
     pass
+
 
 @allure.epic('API operations')
 @allure.story('Create repository, initialize "main" branch, create new branch, delete repository')
@@ -39,7 +40,6 @@ def test_basic_api_operation(api_fixture):
     """
     # Initialize the Repositories API client
     repo = Repositories(AUTH, BITBUCKET_WORKSPACE)
-
     repo_name = "test-api-repo"
 
     try:
@@ -48,24 +48,22 @@ def test_basic_api_operation(api_fixture):
     except Exception as e:
         pass
 
-
-    # Step 1: Create the repository
+    # Create the repository
     repo.create_repositories(repo_name)
     try:
-        # Step 2: Get the repository details and verify the repository was created
+        # Get the repository details and verify the repository was created
         repo_details = repo.get_repo_details(repo_name)
         assert repo_details["name"] == repo_name
 
         logger.info("Checking if 'main' branch exists...")
 
-        # Step 3: If the 'main' branch does not exist, initialize it with a commit
+        # If the 'main' branch does not exist, initialize it with a commit
         if not repo.branch_exist(repo_name, "main"):
             repo.initialize_main_branch(repo_name, "Initial commit to create main",
                                         {'README.md': ('README.md', b'# Initial Commit\n')})
 
-        # Step 4: Create a new branch named "test-branch"
+        # Create a new branch named "test-branch"
         repo.create_branch(repo_name, "test-branch")
     finally:
-        # Step 5: Delete the repository after the operations are complete
+        # Delete the repository after the operations are complete
         assert repo.delete_repository(repo_name), f"Failed to delete repo"
-

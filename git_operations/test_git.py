@@ -1,12 +1,13 @@
+import logging
 import os
+import shutil
+import time
 
 import allure
 import pytest
 import requests
-import logging
-import shutil
-import time
 from git import Repo
+
 from config import BITBUCKET_USERNAME, BITBUCKET_APP_PASSWORD, BITBUCKET_WORKSPACE
 
 # Setting up the logger for the script
@@ -44,6 +45,7 @@ def clone_repo():
     logger.info(f"Cloning repository into {LOCAL_REPO_PATH}...")
     return Repo.clone_from(REPO_URL, LOCAL_REPO_PATH)
 
+
 def modify_file():
     """
     Modifies the specified file (README.md) in the repository by
@@ -71,23 +73,16 @@ def commit_and_push(repo):
     Returns:
     tuple: The commit hash and the diff of changes.
     """
-    # I want to get diff before add files
     diff = repo.git.diff()
-
-    # Stage all changes
     repo.git.add(A=True)
-
-    # Commit changes with a custom message
     commit_hash = repo.index.commit("Automated commit via pytest")
-
-    # Set the remote URL and push the changes
     repo.remotes.origin.set_url(REPO_URL)
     repo.remotes.origin.push()
 
-    logger.info("Changes pushed successfully to Bitbucket.")
+    logger.info("Changes pushed successfully to Bitbucket")
     return commit_hash, diff
 
-# Function to validate if the modified file(s) are reflected on Bitbucket after the push
+
 def validate_remote_modified_files(commit_hash, diff):
     """
     Validates if the modified file(s) are reflected on Bitbucket after a push.
@@ -120,7 +115,7 @@ def validate_remote_modified_files(commit_hash, diff):
     assert changes[:-1] == diff
     return True
 
-# Complete test function to perform git operations
+
 @allure.epic('Git Operations')
 @allure.story('Clone repository, modify file, push changes')
 @allure.severity(allure.severity_level.CRITICAL)
@@ -137,17 +132,9 @@ def test_git_operations(git_operations_fixture):
     - Commit and push the changes.
     - Validate that the changes are reflected in the remote repository.
     """
-    # Clone the repository
     repo = clone_repo()
-
-    # Modify the file in the repository
     modify_file()
-
-    # Commit and push changes
     (commit_hash, diff) = commit_and_push(repo)
-
-    # Validate if the changes are reflected on Bitbucket
     assert validate_remote_modified_files(commit_hash, diff), f"File '{MODIFIED_FILE}' was not modified on Bitbucket."
 
     logger.info("Git operations completed and validated successfully.")
-

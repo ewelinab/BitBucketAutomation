@@ -2,7 +2,6 @@ import logging
 import os
 import sys
 
-import pytest
 from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)

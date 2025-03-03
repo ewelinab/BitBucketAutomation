@@ -11,7 +11,7 @@ from ui.pages.BasePage import BasePage
 logger = logging.getLogger(__name__)
 
 
-class BitbucketRepositoryPage(BasePage):
+class RepositoryPage(BasePage):
     """
     Page Object Model (POM) for Bitbucket's Repository Page.
     Provides methods to interact with elements on the repository creation page.
@@ -21,7 +21,6 @@ class BitbucketRepositoryPage(BasePage):
     PROJECT_NAME_DROPDOWN_SPAN = (By.XPATH, "//ul[@class='select2-results']/span[contains(text(), 'Untitled project')]")
     REPO_NAME_INPUT = (By.ID, "id_name")
     CREATE_REPO_BUTTON = (By.XPATH, '//button[contains(text(), "Create repository")]')
-
 
     def __init__(self, workspace, driver):
         """
@@ -50,7 +49,7 @@ class BitbucketRepositoryPage(BasePage):
         Opens the 'Create repository' form by clicking the corresponding button on the page.
         """
         self.wait.until(EC.element_to_be_clickable(self.CREATE_REPO_BUTTON)).click()
-        logger.info("Opened the create repository form.")
+        logger.info("Opened the create repository form")
 
     def create_repository(self, repo_name):
         """
@@ -63,10 +62,9 @@ class BitbucketRepositoryPage(BasePage):
         # TODO: figure out how to fix loading of items
         sleep(1)
 
-
         select_input = self.wait.until(EC.element_to_be_clickable(self.PROJECT_NAME_DROPDOWN_INPUT))
         select_input.send_keys("Untitled project")
         select_input.send_keys(Keys.ENTER)
         self.wait.until(EC.element_to_be_clickable(self.REPO_NAME_INPUT)).send_keys(repo_name)
         self.wait.until(EC.element_to_be_clickable(self.CREATE_REPO_BUTTON)).click()
-        logger.info(f"Repository '{repo_name}' creation submitted.")
+        logger.info(f"Repository '{repo_name}' creation submitted")
