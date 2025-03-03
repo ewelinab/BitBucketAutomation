@@ -1,7 +1,7 @@
 import logging
 
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 
 import config
 from ui.pages.BasePage import BasePage
@@ -36,7 +36,7 @@ class BranchesPage(BasePage):
         :return: True if the page is loaded correctly, False otherwise.
         """
         try:
-            self.wait.until(EC.visibility_of_element_located(self.CREATE_BRANCH_BUTTON))
+            self.wait.until(ec.visibility_of_element_located(self.CREATE_BRANCH_BUTTON))
             return True
         except Exception as e:
             logger.error(e)
@@ -50,4 +50,4 @@ class BranchesPage(BasePage):
 
         :return: True if the user can create a branch, False otherwise.
         """
-        return self.wait.until(EC.visibility_of_element_located(self.CREATE_BRANCH_BUTTON)).is_enabled()
+        return self.wait.until(ec.visibility_of_element_located(self.CREATE_BRANCH_BUTTON)).is_enabled()

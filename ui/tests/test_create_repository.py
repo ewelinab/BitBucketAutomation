@@ -1,6 +1,7 @@
 import allure
 import pytest
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 
 import config
@@ -48,6 +49,7 @@ def login(ui_fixture):
     login_page.open()
     login_page.login(config.BITBUCKET_USERNAME_EMAIL, config.BITBUCKET_PASSWORD)
     yield driver
+
 
 repo = Repositories((config.BITBUCKET_USERNAME, config.BITBUCKET_APP_PASSWORD), config.BITBUCKET_WORKSPACE)
 
@@ -199,7 +201,7 @@ def test_repository_role_permissions(ui_fixture):
         try:
             file_page.open()
             assert False, "User should not be able to open repository page, If does not have permissions"
-        except Exception as e:
+        except Exception:
             pass
 
     finally:

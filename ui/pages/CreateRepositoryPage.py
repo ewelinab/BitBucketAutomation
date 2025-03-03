@@ -3,7 +3,7 @@ from time import sleep
 
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 
 import config
 from ui.pages.BasePage import BasePage
@@ -38,7 +38,7 @@ class RepositoryPage(BasePage):
         :return: True if the page is loaded correctly, False otherwise.
         """
         try:
-            self.wait.until(EC.visibility_of_element_located(self.CREATE_REPO_BUTTON))
+            self.wait.until(ec.visibility_of_element_located(self.CREATE_REPO_BUTTON))
             return True
         except Exception as e:
             logger.error(e)
@@ -48,7 +48,7 @@ class RepositoryPage(BasePage):
         """
         Opens the 'Create repository' form by clicking the corresponding button on the page.
         """
-        self.wait.until(EC.element_to_be_clickable(self.CREATE_REPO_BUTTON)).click()
+        self.wait.until(ec.element_to_be_clickable(self.CREATE_REPO_BUTTON)).click()
         logger.info("Opened the create repository form")
 
     def create_repository(self, repo_name):
@@ -57,14 +57,14 @@ class RepositoryPage(BasePage):
 
         :param repo_name: The name of the repository to be created.
         """
-        select_project = self.wait.until(EC.element_to_be_clickable(self.PROJECT_NAME_DROPDOWN_BUTTON))
+        select_project = self.wait.until(ec.element_to_be_clickable(self.PROJECT_NAME_DROPDOWN_BUTTON))
         select_project.click()
         # TODO: figure out how to fix loading of items
         sleep(1)
 
-        select_input = self.wait.until(EC.element_to_be_clickable(self.PROJECT_NAME_DROPDOWN_INPUT))
+        select_input = self.wait.until(ec.element_to_be_clickable(self.PROJECT_NAME_DROPDOWN_INPUT))
         select_input.send_keys("Untitled project")
         select_input.send_keys(Keys.ENTER)
-        self.wait.until(EC.element_to_be_clickable(self.REPO_NAME_INPUT)).send_keys(repo_name)
-        self.wait.until(EC.element_to_be_clickable(self.CREATE_REPO_BUTTON)).click()
+        self.wait.until(ec.element_to_be_clickable(self.REPO_NAME_INPUT)).send_keys(repo_name)
+        self.wait.until(ec.element_to_be_clickable(self.CREATE_REPO_BUTTON)).click()
         logger.info(f"Repository '{repo_name}' creation submitted")

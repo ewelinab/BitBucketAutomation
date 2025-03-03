@@ -42,11 +42,7 @@ def test_basic_api_operation(api_fixture):
     repo = Repositories(AUTH, BITBUCKET_WORKSPACE)
     repo_name = "test-api-repo"
 
-    try:
-        # Delete repo beforehand to be sure it's not exist
-        repo.delete_repository(repo_name)
-    except Exception as e:
-        pass
+    repo.delete_repository(repo_name)
 
     # Create the repository
     repo.create_repositories(repo_name)

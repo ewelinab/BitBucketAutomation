@@ -3,7 +3,7 @@ import logging
 import selenium
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 
 import config
 from ui.pages.BasePage import BasePage
@@ -36,7 +36,7 @@ class LoginPage(BasePage):
         :return: True if the username field is present (indicating the page is loaded), False otherwise.
         """
         try:
-            self.wait.until(EC.presence_of_element_located(self.USERNAME_FIELD))
+            self.wait.until(ec.presence_of_element_located(self.USERNAME_FIELD))
             return True
         except Exception as e:
             logger.error(e)
@@ -49,9 +49,9 @@ class LoginPage(BasePage):
         :return: True if the user is logged in (i.e., the pull request section is visible), False otherwise.
         """
         try:
-            assert self.wait.until(EC.visibility_of_element_located(self.PULL_REQUEST_SECTION))
+            assert self.wait.until(ec.visibility_of_element_located(self.PULL_REQUEST_SECTION))
             return True
-        except selenium.common.exceptions.TimeoutException as e:
+        except selenium.common.exceptions.TimeoutException:
             logger.info("Pull request section was not available in give time. Login was not successful")
             return False
 
@@ -65,13 +65,13 @@ class LoginPage(BasePage):
         :return: True if the login is successful, False otherwise.
         """
         try:
-            username_field = self.wait.until(EC.element_to_be_clickable(self.USERNAME_FIELD))
+            username_field = self.wait.until(ec.element_to_be_clickable(self.USERNAME_FIELD))
             username_field.send_keys(username)
-            continue_button = self.wait.until(EC.element_to_be_clickable(self.CONTINUE_BUTTON))
+            continue_button = self.wait.until(ec.element_to_be_clickable(self.CONTINUE_BUTTON))
             continue_button.click()
 
-            password_field = self.wait.until(EC.element_to_be_clickable(self.PASSWORD_FIELD))
-            login_button = self.wait.until(EC.element_to_be_clickable(self.LOGIN_BUTTON))
+            password_field = self.wait.until(ec.element_to_be_clickable(self.PASSWORD_FIELD))
+            login_button = self.wait.until(ec.element_to_be_clickable(self.LOGIN_BUTTON))
             password_field.send_keys(password)
             login_button.click()
 

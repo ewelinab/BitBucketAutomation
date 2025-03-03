@@ -3,7 +3,7 @@ import time
 
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 
 import config
 from ui.pages.BasePage import BasePage
@@ -49,7 +49,7 @@ class RepositoryPermissionPage(BasePage):
         :return: True if the page is loaded correctly, False otherwise.
         """
         try:
-            self.wait.until(EC.element_to_be_clickable(self.ADD_PRIVILEGE_BUTTON))
+            self.wait.until(ec.element_to_be_clickable(self.ADD_PRIVILEGE_BUTTON))
             return True
         except Exception as e:
             logger.error(e)
@@ -61,16 +61,16 @@ class RepositoryPermissionPage(BasePage):
 
         :param user: The username or email of the user to grant privileges to.
         """
-        self.wait.until(EC.element_to_be_clickable(self.ADD_PRIVILEGE_BUTTON)).click()
-        x = self.wait.until(EC.element_to_be_clickable(
+        self.wait.until(ec.element_to_be_clickable(self.ADD_PRIVILEGE_BUTTON)).click()
+        x = self.wait.until(ec.element_to_be_clickable(
             (By.XPATH, '//div[contains(., "Add a group or user by name")][1]/following-sibling::div//input[1]')))
         x.send_keys(user)
         # Unfortunately there was not enough time to figure out how they custom list work to wait properly
         time.sleep(3)
         x.send_keys(Keys.ENTER)
         # Click confirm
-        self.wait.until(EC.element_to_be_clickable((By.XPATH, '//button[contains(., "Confirm")][1]'))).click()
-        self.wait.until(EC.element_to_be_clickable((By.XPATH, f'//tr[contains(., "{user}")][1]')))
+        self.wait.until(ec.element_to_be_clickable((By.XPATH, '//button[contains(., "Confirm")][1]'))).click()
+        self.wait.until(ec.element_to_be_clickable((By.XPATH, f'//tr[contains(., "{user}")][1]')))
         pass
 
     def change_privilege(self, user, permission: RepositoryPermission):
@@ -80,12 +80,12 @@ class RepositoryPermissionPage(BasePage):
         :param user: The username whose permissions need to be changed.
         :param permission: The new permission level (READ or WRITE).
         """
-        user_tr = self.wait.until(EC.element_to_be_clickable((By.XPATH, f'//tr[contains(., "{user}")][1]')))
+        user_tr = self.wait.until(ec.element_to_be_clickable((By.XPATH, f'//tr[contains(., "{user}")][1]')))
         perm_dropdown = user_tr.find_element(By.XPATH, './/button[@data-testid="privilegesDropdown--trigger"][1]')
         perm_dropdown.click()
         write = perm_dropdown.find_element(By.XPATH, f'//div//span[contains(., "{permission.value}")][1]')
         write.click()
-        self.wait.until(EC.text_to_be_present_in_element(
+        self.wait.until(ec.text_to_be_present_in_element(
             (By.XPATH, f'//tr[contains(., "{user}")][1]//button[@data-testid="privilegesDropdown--trigger"][1]'),
             permission.value))
 
@@ -95,8 +95,8 @@ class RepositoryPermissionPage(BasePage):
 
         :param user: The username to remove from repository access.
         """
-        user_tr = self.wait.until(EC.element_to_be_clickable((By.XPATH, f'//tr[contains(., "{user}")][1]')))
+        user_tr = self.wait.until(ec.element_to_be_clickable((By.XPATH, f'//tr[contains(., "{user}")][1]')))
         user_tr.find_element(By.XPATH, './/button[contains(., "Remove")][1]').click()
         self.wait.until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="remove-access-modal--remove-btn"]'))).click()
-        self.wait.until(EC.invisibility_of_element_located((By.XPATH, f'//tr[contains(., "{user}")][1]')))
+            ec.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="remove-access-modal--remove-btn"]'))).click()
+        self.wait.until(ec.invisibility_of_element_located((By.XPATH, f'//tr[contains(., "{user}")][1]')))
