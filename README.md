@@ -33,7 +33,7 @@ BITBUCKET_SECOND_USERNAME_NAME=""
 To run the tests, use the following command:
 
 ```bash
-pytest -n 4 --alluredir .tmp/allure-results
+pytest -n 5 --alluredir .tmp/allure-results
 allure serve .tmp/allure-results
 ```
 

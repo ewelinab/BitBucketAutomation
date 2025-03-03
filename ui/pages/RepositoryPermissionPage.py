@@ -28,8 +28,6 @@ class RepositoryPermissionPage(BasePage):
     This class provides methods for managing user permissions, including adding,
     modifying, and removing user privileges.
     """
-    # EDIT_BUTTON = (By.XPATH, '//main//button[contains(., "Edit")][1]')
-    # COMMIT_BUTTON = (By.XPATH, '//form//button[contains(., "Commit")][1]')
     ADD_PRIVILEGE_BUTTON = (By.CSS_SELECTOR, '[data-testid="addPrivilegeButton"]')
 
     def __init__(self, workspace, repo_name, driver):

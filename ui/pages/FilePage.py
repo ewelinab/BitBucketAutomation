@@ -76,7 +76,7 @@ class FilePage(BasePage):
         pull_request_checkbox = self.wait.until(ec.element_to_be_clickable((By.ID, "id_create-pullrequest")))
         if not pull_request_checkbox.is_selected():
             # Click is intercepted all the time, even that no modal is visible and don't have time to investigate more
-            # Pull_request_checkbox.click()
+            #  this not working -> pull_request_checkbox.click()
             self.driver.execute_script("arguments[0].click();", pull_request_checkbox)
 
         branch_name_input = self.wait.until(ec.element_to_be_clickable((By.ID, "id_branch-name")))
