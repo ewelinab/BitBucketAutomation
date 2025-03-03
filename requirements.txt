@@ -1,0 +1,9 @@
+pytest
+requests
+dotenv
+gitpython
+selenium
+pytest-xdist~=3.6.1
+allure-pytest~=2.13.5
+python-dotenv
+allure-python-commons
